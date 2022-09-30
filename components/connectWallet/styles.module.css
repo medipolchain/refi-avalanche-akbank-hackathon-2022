@@ -1,0 +1,28 @@
+.box{
+    @apply
+
+    px-32 py-28
+  
+    
+
+}
+.gridBox{
+    @apply
+    grid grid-cols-3  gap-16
+    xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 
+}
+.gridItem{
+    @apply
+    bg-[#25221F] rounded text-center py-8 px-5 text-white
+}
+.title{
+    @apply
+    mt-3 text-2xl xl:text-lg font-PoppinsSemiBold mb-2
+}
+.description{
+    @apply
+    text-lg xl:text-sm 
+}
+
+
+  
