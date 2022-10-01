@@ -19,7 +19,31 @@ load_dotenv(find_dotenv())
 client = MongoClient(os.environ.get("MONGODB_PWD"))
 
 grand_categories = {
-    0: "Education",
+    0: "Arts",
+    1: "Community",
+    2: "Education",
+    3: "Environment",
+    4: "Health",
+    5: "Human Rights",
+    6: "International Development",
+    7: "Religion",
+    8: "Science and Technology",
+    9: "Social Justice",
+    10: "Other"
+}
+
+grand_countries = {
+    0: "Istanbul",
+    1: "Ankara",
+    2: "Izmir",
+    3: "Bursa",
+    4: "Adana",
+    5: "Antalya",
+    6: "Gaziantep",
+    7: "Konya",
+    8: "Mersin",
+    9: "Diyarbakir",
+    10: "Kayseri"
 }
 
 
@@ -204,6 +228,30 @@ async def get_grant(req: Request):
         result = collection.find_one({"index": data["index"]})
 
         return result
+
+    except Exception as e:
+        return e
+
+
+@app.get("/countries")
+async def get_countries():
+    """
+    :return: the result of the operation
+    """
+    try:
+        return grand_countries
+
+    except Exception as e:
+        return e
+
+
+@app.get("/categories")
+async def get_categories():
+    """
+    :return: the result of the operation
+    """
+    try:
+        return grand_categories
 
     except Exception as e:
         return e
