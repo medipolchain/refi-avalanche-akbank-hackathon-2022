@@ -55,7 +55,6 @@ export async function getServerSideProps(context) {
     "https://jsonplaceholder.typicode.com/todos"
   );
   console.log("test", data1.data);
-  const data = {};
   return {
     props: {
       data: data1.data,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Col,
   Row,
@@ -30,10 +30,38 @@ export default function CreateModal({ open, handleCancel }) {
   const [current, setCurrent] = useState(0);
   const [activities, setActivities] = useState([
     {
-      sunmary: "",
+      summary: "",
       budget: "",
     },
   ]);
+
+  useEffect(() => {
+    console.log(activities);
+  }, [activities]);
+
+  const [grant, setGrant] = useState({
+    grantName:"",
+    year:"",
+    category:"",
+    budget:"",
+    date:"",
+    report:"",
+    domain:"",
+    impact:[
+        {
+          numberOfHouse:"",
+          gender:"",
+          ageRange:"",  
+        },
+        {
+          numberOfHouse:"",
+          gender:"",
+          ageRange:"",
+      },
+      ]
+  })
+
+
   const [form] = Form.useForm();
   const [requiredMark, setRequiredMarkType] = useState("optional");
   const onChange = (date, dateString) => {
@@ -66,7 +94,7 @@ export default function CreateModal({ open, handleCancel }) {
     setActivities((prev) => [
       ...prev,
       {
-        sunmary: "",
+        summary: "",
         budget: "",
       },
     ]);

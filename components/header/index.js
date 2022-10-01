@@ -2,12 +2,27 @@ import Image from "next/image";
 import Link from "next/link";
 import cn from "classnames";
 import styles from "./styles.module.css";
+import React, { useState } from "react";
 
 import { useAccount } from "../web3/hooks";
+import { useWeb3 } from "../web3/providers/web3";
+import { useEffect } from "react";
 
 export default function Header({ page }) {
   const { account } = useAccount();
+  const [clientAccount, setClientAccount] = useState(undefined);
+  const { connect, web3 } = useWeb3();
   console.log(account);
+
+  const connectClient = async () => {
+    setClientAccount(true);
+    await connect();
+  };
+
+  const disconnect = () => {
+    setClientAccount(!clientAccount);
+    console.log(clientAccount);
+  };
 
   return (
     <div className={cn(page ? "bg-white" : "")}>
@@ -32,15 +47,15 @@ export default function Header({ page }) {
           </Link>
         </nav>
         <div className="flex gap-3">
-          {account.data ? (
+          {account.data && clientAccount ? (
             <>
             <Link href="/profile">
               <a className={styles.navButton}>Profile</a>
             </Link>
-            <button className={styles.navDisconnectButton}>Disconnect</button>
+            <button onClick={disconnect} className={styles.navDisconnectButton}>Disconnect</button>
             </>
           ): (
-            <button className={styles.navButton}>Connect Wallet</button>
+            <button onClick={() => connectClient()} className={styles.navButton}>Connect Wallet</button>
           )}
         </div>
       </header>
