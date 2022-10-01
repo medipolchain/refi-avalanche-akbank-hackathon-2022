@@ -56,21 +56,6 @@ export default function Grants({ data }) {
             <Col className="gutter-row mb-4" span={8}>
               <Card id={1} />
             </Col>
-            <Col className="gutter-row mb-4" span={8}>
-              <Card />
-            </Col>
-            <Col className="gutter-row mb-4" span={8}>
-              <Card />
-            </Col>
-            <Col className="gutter-row mb-4" span={8}>
-              <Card />
-            </Col>
-            <Col className="gutter-row mb-4" span={8}>
-              <Card />
-            </Col>
-            <Col className="gutter-row mb-4" span={8}>
-              <Card />
-            </Col>
           </Row>
         </Content>
       </div>

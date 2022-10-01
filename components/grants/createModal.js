@@ -25,7 +25,7 @@ const children = [];
 for (let i = 10; i < 36; i++) {
   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
 }
-export default function CreateModal({ open, handleCancel }) {
+export default function   CreateModal({ open, handleCancel }) {
   const [filterActive, setFilterActive] = useState(false);
   const [current, setCurrent] = useState(0);
   const [activities, setActivities] = useState([
@@ -60,14 +60,14 @@ export default function CreateModal({ open, handleCancel }) {
   const [form] = Form.useForm();
 
   const onChange = (date, dateString) => {
-    console.log(date, dateString);
+    setGrant({ ...grant, year: dateString.split("-")[0] });
   };
   console.log("form", form.getFieldValue("grantName"));
   const onRequiredTypeChange = (d) => {
     console.log("d", d);
   };
   const selectAfter = (
-    <Select defaultValue="USD" size="large" style={{ width: 60 }}>
+    <Select initialValue="USD" size="large" style={{ width: 60 }}>
       <Option value="USD">$</Option>
     </Select>
   );
@@ -106,6 +106,11 @@ export default function CreateModal({ open, handleCancel }) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  const createGrant = () => {
+    //POST request to create grant
+    console.log(grant, impact, activities);
+  }
 
   return (
     <Modal
@@ -211,7 +216,7 @@ export default function CreateModal({ open, handleCancel }) {
             >
               <Input
                 addonAfter={selectAfter}
-                defaultValue={100}
+                initialValue={100}
                 size="large"
                 className="w-full"
               />
@@ -276,7 +281,7 @@ export default function CreateModal({ open, handleCancel }) {
                 icon: <InfoCircleOutlined />,
               }}
             >
-              <Input defaultValue={100} size="large" className="w-full" />
+              <Input initialValue={100} size="large" className="w-full" />
             </Form.Item>
           </Col>
           {impact.map((i, key) => (
@@ -327,7 +332,7 @@ export default function CreateModal({ open, handleCancel }) {
                   }}
                 >
                   <Select
-                    defaultValue="man"
+                    initialValue="man"
                     size="large"
                     className="w-full"
                     onChange={(e) =>
@@ -470,9 +475,10 @@ export default function CreateModal({ open, handleCancel }) {
               </button>
               <button
                 type="submit"
+                onClick={createGrant}
                 className="bg-baseGreen text-lg text-white p-2 rounded "
               >
-                Next Step
+                Submit
               </button>
             </Col>
           </Row>
