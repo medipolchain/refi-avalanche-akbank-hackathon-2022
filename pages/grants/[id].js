@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import { Layout, Col, Row, PageHeader } from "antd";
-import { SideBar, DetailBox, Card, CreateModal } from "../../components/grants";
+import { SideBar, DetailBox } from "../../components/grants";
 import { axiosClient } from "../../utils/axiosClient";
 const { Content } = Layout;
 export default function GrantsDetail({ data }) {
@@ -34,7 +34,7 @@ export default function GrantsDetail({ data }) {
                 title="Grants"
               />
             </Col>
-            <Col className="gutter-row mb-4" span={16}>
+            <Col className="gutter-row mb-4" span={18}>
               <DetailBox />
             </Col>
             <Col className="gutter-row mb-4" span={6}>

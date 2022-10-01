@@ -24,7 +24,7 @@
 .card{
     @apply
     w-full
-    shadow bg-white rounded-lg
+    shadow bg-white rounded-lg block
     p-5 mb-2
 }
 .cardImage{
