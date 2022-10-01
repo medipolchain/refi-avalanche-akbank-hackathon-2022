@@ -20,7 +20,6 @@ client = MongoClient(os.environ.get("MONGODB_PWD"))
 
 grand_categories = {
     0: "Education",
-
 }
 
 
@@ -73,9 +72,24 @@ def get_collection(collection_name: str):
     :return: the collection object
     """
     try:
-        db = get_database("pandas")
+        db = get_database("grants")
         collection = db[collection_name]
         return collection
+
+    except Exception as e:
+        print(e)
+        return e
+
+
+def grant_index_count():
+    """
+    :return: the number of grants in the database
+    """
+    try:
+        pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
+        collection = get_collection("grants")
+        count = collection.count_documents({})
+        return count
 
     except Exception as e:
         print(e)
@@ -134,9 +148,10 @@ async def set_grant(req: Request):
     """
     try:
         data = await req.json()
-        db = get_database("grants")
-        collection = db["grants"]
-        result = collection.insert_one(data)
+        data["index"] = grant_index_count()
+
+        collection = get_collection("grants")
+        result = collection.insert_one(dict(data))
         return result
 
     except Exception as e:
@@ -165,10 +180,11 @@ async def get_grant(req: Request):
     """
     try:
         data = await req.json()
-        data = data["id"]
+
         db = get_database("grants")
         collection = db["grants"]
-        result = collection.find_one(data)
+        result = collection.find_one({"index": data["index"]})
+
         return result
 
     except Exception as e:
