@@ -140,18 +140,36 @@ async def set_grant(req: Request):
         "impact_area": 150, # square meters
         "impact_people": 1000,
         "average_age": 25,
-        "legal": True,
+        "legal": 0,
         "date": 6, # months
         "report_hash": 0x1234567890,
         "activities": 6, # total number of activities required to complete the grant
     }
     """
     try:
+        pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
+
         data = await req.json()
-        data["index"] = grant_index_count()
+
+        grant_info = {
+            "name": data["name"],
+            "description": data["description"],
+            "index": grant_index_count(),
+            "category": data["category"],
+            "year": data["year"],
+            "location": data["location"],
+            "budget": data["budget"],
+            "impact_area": data["impact_area"],  # square meters
+            "impact_people": data["impact_people"],
+            "average_age": data["average_age"],
+            "legal": data["legal"],
+            "date": data["date"],  # months
+            "report_hash": data["report_hash"],
+            "activities": data["activities"],  # total number of activities required to complete the grant
+        }
 
         collection = get_collection("grants")
-        result = collection.insert_one(dict(data))
+        result = collection.insert_one(grant_info).inserted_id
         return result
 
     except Exception as e:
