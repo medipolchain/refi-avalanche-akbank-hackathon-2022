@@ -12,7 +12,6 @@ export default function Header({ page }) {
   const { account } = useAccount();
   const [clientAccount, setClientAccount] = useState(undefined);
   const { connect, web3 } = useWeb3();
-  console.log(account);
 
   const connectClient = async () => {
     setClientAccount(true);
@@ -36,7 +35,7 @@ export default function Header({ page }) {
           <Link href="/">
             <a className={styles.navLink}>Home</a>
           </Link>
-          <Link href="/about-us">
+          <Link href="/about">
             <a className={styles.navLink}>About Us</a>
           </Link>
           <Link href="/grants">

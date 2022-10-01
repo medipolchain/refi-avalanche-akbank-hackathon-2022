@@ -3,8 +3,10 @@ import Head from "next/head";
 import { Layout, Col, Row } from "antd";
 import { Title, Filter, Card, CreateModal } from "../components/grants";
 import { axiosClient } from "../utils/axiosClient";
+import { useAccount } from "../components/web3/hooks";
 const { Content } = Layout;
 export default function Grants({ data }) {
+  const { account } = useAccount();
   const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);
@@ -24,7 +26,7 @@ export default function Grants({ data }) {
         <Content className="container mx-auto mt-20 px-20">
           <Title showModal={showModal} />
           <Filter />
-          <CreateModal open={open} handleCancel={handleCancel} />
+          <CreateModal open={open} account={account} handleCancel={handleCancel} />
           <Row gutter={16}>
             <Col className="gutter-row mb-4" span={8}>
               <Card id={1} />

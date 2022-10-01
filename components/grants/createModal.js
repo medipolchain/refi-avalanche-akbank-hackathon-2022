@@ -34,42 +34,37 @@ export default function CreateModal({ open, handleCancel }) {
       budget: "",
     },
   ]);
-
-  useEffect(() => {
-    console.log(activities);
-  }, [activities]);
+  const [impact, setImpact] = useState([
+    {
+      numberOfHouse: "",
+      gender: "",
+      ageRange: "",
+    },
+    {
+      numberOfHouse: "",
+      gender: "",
+      ageRange: "",
+    },
+  ]);
 
   const [grant, setGrant] = useState({
-    grantName:"",
-    year:"",
-    category:"",
-    budget:"",
-    date:"",
-    report:"",
-    domain:"",
-    impact:[
-        {
-          numberOfHouse:"",
-          gender:"",
-          ageRange:"",  
-        },
-        {
-          numberOfHouse:"",
-          gender:"",
-          ageRange:"",
-      },
-      ]
-  })
-
+    grantName: "",
+    year: "",
+    category: [],
+    budget: "",
+    date: "",
+    report: "",
+    domain: "",
+  });
 
   const [form] = Form.useForm();
-  const [requiredMark, setRequiredMarkType] = useState("optional");
+
   const onChange = (date, dateString) => {
     console.log(date, dateString);
   };
-
-  const onRequiredTypeChange = ({ requiredMarkValue }) => {
-    setRequiredMarkType(requiredMarkValue);
+  console.log("form", form.getFieldValue("grantName"));
+  const onRequiredTypeChange = (d) => {
+    console.log("d", d);
   };
   const selectAfter = (
     <Select defaultValue="USD" size="large" style={{ width: 60 }}>
@@ -77,7 +72,6 @@ export default function CreateModal({ open, handleCancel }) {
     </Select>
   );
   const onStepChange = (value) => {
-    console.log("onChange:", current);
     setCurrent(value);
   };
   const controlActivities = (name, value, key) => {
@@ -102,7 +96,17 @@ export default function CreateModal({ open, handleCancel }) {
   const removeActivities = (key) => {
     setActivities(activities.filter((item, index) => key !== index));
   };
+  const onValuesChange = (d, a) => {
+    setGrant(a);
+  };
+  const onFinish = (values) => {
+    console.log(grant, impact, activities);
+  };
 
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+  
   return (
     <Modal
       open={open}
@@ -115,9 +119,10 @@ export default function CreateModal({ open, handleCancel }) {
       <Form
         form={form}
         layout="vertical"
-        initialValues={{ requiredMarkValue: requiredMark }}
-        onValuesChange={onRequiredTypeChange}
-        requiredMark={requiredMark}
+        initialValues={grant}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        onValuesChange={onValuesChange}
       >
         <Steps
           size="small"
@@ -129,297 +134,349 @@ export default function CreateModal({ open, handleCancel }) {
           <Step title="Domain Size" />
           <Step title="Activities" />
         </Steps>
-        {current === 0 && (
-          <Row gutter={16}>
-            <Col className="gutter-row" span={24}>
-              <Form.Item
-                label="Grant name"
-                required
-                tooltip="This is a required field"
-              >
-                <Input placeholder="Grant name" size="large" />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                label="Year"
-                required
-                tooltip="This is a required field"
-              >
-                <DatePicker
-                  onChange={onChange}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                required
-                label="Category/Donated Area"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
+
+        <Row gutter={16} className={current === 0 ? "flex" : "hidden"}>
+          <Col className="gutter-row" span={24}>
+            <Form.Item
+              label="Grant name"
+              tooltip="This is a required field"
+              name="grantName"
+              rules={[
+                {
+                  required: true,
+                  message: "This is a required field!",
+                },
+              ]}
+            >
+              <Input placeholder="Grant name" size="large" />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Form.Item
+              label="Year"
+              name="year"
+              rules={[
+                {
+                  required: true,
+                  message: "This is a required field!",
+                },
+              ]}
+              tooltip="This is a required field"
+            >
+              <DatePicker onChange={onChange} size="large" className="w-full" />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={12}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "This is a required field!",
+                },
+              ]}
+              name="category"
+              label="Category/Donated Area"
+              tooltip={{
+                title: "Tooltip with customize icon",
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <Select
+                mode="multiple"
+                size={"large"}
+                placeholder="Please select"
+                // onChange={handleChange}
+                style={{
+                  width: "100%",
                 }}
               >
-                <Select
-                  mode="multiple"
-                  size={"large"}
-                  placeholder="Please select"
-                  // onChange={handleChange}
-                  style={{
-                    width: "100%",
+                {children}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={24}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "This is a required field!",
+                },
+              ]}
+              name="budget"
+              label="Budget"
+              tooltip={{
+                title: "Tooltip with customize icon",
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <Input
+                addonAfter={selectAfter}
+                defaultValue={100}
+                size="large"
+                className="w-full"
+              />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={24}>
+            <Form.Item
+              name="date"
+              label="Planned Action Time"
+              rules={[
+                {
+                  required: true,
+                  message: "This is a required field!",
+                },
+              ]}
+              tooltip="This is a required field"
+            >
+              <DatePicker onChange={onChange} size="large" className="w-full" />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={24}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "This is a required field!",
+                },
+              ]}
+              name="report"
+              label="Report"
+              tooltip={{
+                title: "Tooltip with customize icon",
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <TextArea size="large" className="w-full" />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row text-end" span={24}>
+            <button
+              className="bg-baseGreen text-lg text-white p-2 rounded "
+              onClick={() => onStepChange(1)}
+            >
+              Next Step
+            </button>
+          </Col>
+        </Row>
+
+        <Row gutter={16} className={current === 1 ? "flex" : "hidden"}>
+          <Col className="gutter-row" span={24}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  message: "This is a required field!",
+                },
+              ]}
+              name="domain"
+              label="Domain"
+              tooltip={{
+                title: "Tooltip with customize icon",
+                icon: <InfoCircleOutlined />,
+              }}
+            >
+              <Input defaultValue={100} size="large" className="w-full" />
+            </Form.Item>
+          </Col>
+          {impact.map((i, key) => (
+            <div className="flex w-full" key={key}>
+              <Col className="gutter-row" span={8}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is a required field!",
+                    },
+                  ]}
+                  onChange={(e) =>
+                    setImpact(
+                      impact.map((item, index) => {
+                        if (key === index) {
+                          item["numberOfHouse"] = e.target.value;
+                        }
+                        return item;
+                      })
+                    )
+                  }
+                  label="Number of Houses"
+                  tooltip={{
+                    title: "Tooltip with customize icon",
+                    icon: <InfoCircleOutlined />,
                   }}
                 >
-                  {children}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={24}>
-              <Form.Item
-                required
-                label="Budget"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Input
-                  addonAfter={selectAfter}
-                  defaultValue={100}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={24}>
-              <Form.Item
-                label="Planned Action Time"
-                required
-                tooltip="This is a required field"
-              >
-                <DatePicker
-                  onChange={onChange}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={24}>
-              <Form.Item
-                required
-                label="Report"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <TextArea size="large" className="w-full" />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row text-end" span={24}>
-              <button
-                className="bg-baseGreen text-lg text-white p-2 rounded "
-                onClick={() => onStepChange(1)}
-              >
-                Next Step
-              </button>
-            </Col>
-          </Row>
-        )}
-        {current === 1 && (
-          <Row gutter={16}>
-            <Col className="gutter-row" span={24}>
-              <Form.Item
-                required
-                label="Domain"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <InputNumber
-                  defaultValue={100}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <Form.Item
-                required
-                label="Number of Houses"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <InputNumber
-                  defaultValue={100}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <Form.Item
-                required
-                label="Gender"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Select defaultValue="E" size="large" className="w-full">
-                  <Option value="E">Man</Option>
-                  <Option value="K">Woman</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <Form.Item
-                required
-                label="Age Range"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <InputNumber
-                  defaultValue={100}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <Form.Item
-                required
-                label="Number of Houses"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <InputNumber
-                  defaultValue={100}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <Form.Item
-                required
-                label="Gender"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <Select defaultValue="E" size="large" className="w-full">
-                  <Option value="E">Man</Option>
-                  <Option value="K">Woman</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <Form.Item
-                required
-                label="Age Range"
-                tooltip={{
-                  title: "Tooltip with customize icon",
-                  icon: <InfoCircleOutlined />,
-                }}
-              >
-                <InputNumber
-                  defaultValue={100}
-                  size="large"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
+                  <InputNumber
+                    size="large"
+                    value={i.numberOfHouse}
+                    className="w-full"
+                  />
+                </Form.Item>
+              </Col>
+              <Col className="gutter-row" span={8}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is a required field!",
+                    },
+                  ]}
+                  label="Gender"
+                  tooltip={{
+                    title: "Tooltip with customize icon",
+                    icon: <InfoCircleOutlined />,
+                  }}
+                >
+                  <Select
+                    defaultValue="man"
+                    size="large"
+                    className="w-full"
+                    onChange={(e) =>
+                      setImpact(
+                        impact.map((item, index) => {
+                          if (key === index) {
+                            item["gender"] = e;
+                          }
+                          return item;
+                        })
+                      )
+                    }
+                  >
+                    <Option value="man">Man</Option>
+                    <Option value="woman">Woman</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col className="gutter-row" span={8}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is a required field!",
+                    },
+                  ]}
+                  label="Age Range"
+                  tooltip={{
+                    title: "Tooltip with customize icon",
+                    icon: <InfoCircleOutlined />,
+                  }}
+                  onChange={(e) =>
+                    setImpact(
+                      impact.map((item, index) => {
+                        if (key === index) {
+                          item["ageRange"] = e.target.value;
+                        }
+                        return item;
+                      })
+                    )
+                  }
+                >
+                  <InputNumber size="large" className="w-full" />
+                </Form.Item>
+              </Col>
+            </div>
+          ))}
 
+          <Col className="gutter-row text-end" span={24}>
+            <button
+              className="bg-gray-600 text-lg text-white p-2 rounded  mr-4"
+              onClick={() => onStepChange(0)}
+            >
+              Prev Step
+            </button>
+            <button
+              className="bg-baseGreen text-lg text-white p-2 rounded "
+              onClick={() => onStepChange(2)}
+            >
+              Next Step
+            </button>
+          </Col>
+        </Row>
+
+        <div className={current === 2 ? "block" : "hidden"}>
+          {activities.map((i, key) => (
+            <Row key={key} gutter={10}>
+              <Col className="gutter-row" span={12}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is a required field!",
+                    },
+                  ]}
+                  onChange={(e) =>
+                    controlActivities("summary", e.target.value, key)
+                  }
+                  label="Summary of the activities and necessary"
+                  tooltip={{
+                    title: "Tooltip with customize icon",
+                    icon: <InfoCircleOutlined />,
+                  }}
+                  key={key + "summary"}
+                >
+                  <Input size="large" value={i.summary} className="w-full" />
+                </Form.Item>
+              </Col>
+              <Col className="gutter-row" span={8}>
+                <Form.Item
+                  key={key + "buget"}
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is a required field!",
+                    },
+                  ]}
+                  onChange={(e) =>
+                    controlActivities("budget", e.target.value, key)
+                  }
+                  initialValue="232323232"
+                  label="Budget of the specific milestone"
+                  tooltip={{
+                    title: "Tooltip with customize icon",
+                    icon: <InfoCircleOutlined />,
+                  }}
+                >
+                  <InputNumber
+                    size="large"
+                    value={i.budget}
+                    className="w-full"
+                  />
+                </Form.Item>
+              </Col>
+              <Col className="gutter-row" span={2}>
+                <button
+                  className="h-full"
+                  onClick={() => removeActivities(key)}
+                >
+                  <span className="bg-[red] hover:bg-black  text-white rounded-full pt-1 px-3 pb-3">
+                    <DeleteOutlined />
+                  </span>
+                </button>
+              </Col>
+            </Row>
+          ))}
+          <button
+            className="bg-gray-600 text-lg text-white p-2 rounded  mr-4 w-full mb-10"
+            onClick={() => addActivities()}
+          >
+            Add Activities
+          </button>
+          <Row gutter={16}>
             <Col className="gutter-row text-end" span={24}>
               <button
                 className="bg-gray-600 text-lg text-white p-2 rounded  mr-4"
-                onClick={() => onStepChange(0)}
+                onClick={() => onStepChange(1)}
               >
                 Prev Step
               </button>
               <button
+                type="submit"
                 className="bg-baseGreen text-lg text-white p-2 rounded "
-                onClick={() => onStepChange(2)}
               >
                 Next Step
               </button>
             </Col>
           </Row>
-        )}
-        {current === 2 && (
-          <>
-            {activities.map((i, key) => (
-              <Row key={key} gutter={16}>
-                <Col className="gutter-row" span={12}>
-                  <Form.Item
-                    required
-                    label="Summary of the activities and necessary"
-                    tooltip={{
-                      title: "Tooltip with customize icon",
-                      icon: <InfoCircleOutlined />,
-                    }}
-                  >
-                    <Input size="large" className="w-full" />
-                  </Form.Item>
-                </Col>
-                <Col className="gutter-row" span={8}>
-                  <Form.Item
-                    required
-                    label="Budget of the specific milestone"
-                    tooltip={{
-                      title: "Tooltip with customize icon",
-                      icon: <InfoCircleOutlined />,
-                    }}
-                  >
-                    <InputNumber size="large" className="w-full" />
-                  </Form.Item>
-                </Col>
-                <Col className="gutter-row" span={2}>
-                  <button
-                    className="h-full"
-                    onClick={() => removeActivities(key)}
-                  >
-                    <span className="bg-[red] hover:bg-black  text-white rounded-full pt-1 px-3 pb-3">
-                      <DeleteOutlined />
-                    </span>
-                  </button>
-                </Col>
-              </Row>
-            ))}
-            <button
-              className="bg-gray-600 text-lg text-white p-2 rounded  mr-4 w-full mb-10"
-              onClick={() => addActivities()}
-            >
-              Add Activities
-            </button>
-            <Row gutter={16}>
-              <Col className="gutter-row text-end" span={24}>
-                <button
-                  className="bg-gray-600 text-lg text-white p-2 rounded  mr-4"
-                  onClick={() => onStepChange(1)}
-                >
-                  Prev Step
-                </button>
-                <button
-                  type="submit"
-                  className="bg-baseGreen text-lg text-white p-2 rounded "
-                >
-                  Next Step
-                </button>
-              </Col>
-            </Row>
-          </>
-        )}
+        </div>
       </Form>
     </Modal>
   );
