@@ -100,13 +100,13 @@ export default function CreateModal({ open, handleCancel }) {
     setGrant(a);
   };
   const onFinish = (values) => {
-    console.log(grant, impact, activities);
+    console.log(gant, impact, activities);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  
+
   return (
     <Modal
       open={open}
@@ -363,7 +363,7 @@ export default function CreateModal({ open, handleCancel }) {
                     setImpact(
                       impact.map((item, index) => {
                         if (key === index) {
-                          item["ageRange"] = e.target.value;
+                          item["age"] = e.target.value;
                         }
                         return item;
                       })

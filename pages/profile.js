@@ -5,7 +5,7 @@ import { Title, Filter, Card, CreateModal } from "../components/grants";
 import { axiosClient } from "../utils/axiosClient";
 import { HeadBox } from "../components/dashboard";
 const { Content } = Layout;
-export default function Dashboard({ data }) {
+export default function Profile({ data }) {
   const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);

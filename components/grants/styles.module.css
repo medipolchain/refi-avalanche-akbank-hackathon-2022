@@ -46,7 +46,6 @@
 }
 .donationButton{
     @apply
-    
     w-full bg-baseGreen text-white h-12 rounded-xl 
     flex items-center text-center justify-center gap-4
     text-lg
@@ -54,7 +53,8 @@
 }
 .filterBox{
     @apply
-     p-4  mb-4
+    mb-2
+    
 }
 .modalTitle{
     @apply
