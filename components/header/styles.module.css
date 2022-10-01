@@ -1,0 +1,34 @@
+.header{
+    @apply
+    flex items-center justify-between
+    container mx-auto  px-20
+    py-6
+}
+.logo{
+    @apply
+    text-5xl font-bold text-baseGreen
+}
+.nav{
+    @apply 
+    flex items-center justify-between 2xl:gap-7 xl:gap-6 lg:gap-4 
+}
+.navLink{
+    @apply
+    text-2xl 2xl:text-lg xl:text-base text-navColor  transition font-semibold
+    hover:text-baseGreen 
+}
+.navButton{
+    @apply
+    transition
+    text-xl bg-baseGreen rounded text-white
+    py-[5px] px-4 
+    hover:bg-baseGreen
+}
+
+.navDisconnectButton{
+    @apply
+    transition
+    text-xl bg-black rounded
+    py-[5px] px-4 
+    hover:bg-red-900
+}

@@ -1,0 +1,30 @@
+.footer{
+    border-top:1px solid #ffffff1a;
+    @apply
+    pt-20 pb-16  mt-10
+    bg-baseGreen
+   
+}
+.footerContent{
+    border-bottom: 2px solid #ffffff1a;
+    @apply
+    flex justify-between
+    pb-10  container mx-auto  px-20
+}
+.footerTitle{
+    
+    @apply
+    text-white text-xl font-semibold mb-3 block
+}
+.footerLink{
+    @apply 
+    transition
+    text-white text-lg font-light mb-[6px]
+    hover:text-baseGreen
+     block
+}
+.socialLink{
+    @apply
+    text-white text-xl
+}
+

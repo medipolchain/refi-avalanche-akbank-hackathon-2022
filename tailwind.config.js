@@ -5,7 +5,15 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        baseGreen: "#47B88F",
+        navColor: "rgb(18 28 45 / 50%)",
+      },
+    },
+    backgroundImage: {
+      world: "url('/world-map.svg')",
+    },
   },
   plugins: [],
-}
+};

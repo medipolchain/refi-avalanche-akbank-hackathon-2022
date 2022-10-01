@@ -1,0 +1,48 @@
+.welcomeBox{
+    background-size: 80%;
+    @apply
+    mb-20
+    w-full px-10  pt-[150px] 
+    relative
+    bg-world bg-no-repeat bg-top bg-cover 
+}
+.bg{
+    background: linear-gradient(180deg,#eef1f3 30%,rgba(238,241,243,0));
+    height: 150px;
+    max-width: 100%;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    z-index: 0;
+    content:'';
+}
+.subTitle{
+    @apply
+    text-base  text-center text-baseGreen
+    font-bold
+    mb-4 block
+}
+.title{
+    @apply
+    text-4xl  text-center text-gray-800
+    font-normal
+    mb-8 block
+}
+.desc{
+    @apply
+    text-base  text-center text-gray-800
+    font-normal
+    mb-8 block
+    max-w-2xl mx-auto
+}
+.itemBox{
+    @apply
+    flex items-center justify-center flex-wrap gap-4
+}
+.item{
+    @apply
+    py-3 px-5 pl-8 text-sm bg-white shadow-sm rounded-2xl
+    hover:bg-baseGreen hover:text-white
+    cursor-pointer
+}
+

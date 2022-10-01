@@ -1,0 +1,62 @@
+.titleBox{
+    @apply
+    bg-gray-800
+    py-10 px-10 rounded-xl mb-10
+    flex items-center  justify-between flex-wrap
+}
+.title{
+    @apply
+    text-5xl text-baseGreen font-bold block
+    mb-4
+}
+.subTitle{
+    @apply
+    text-white  block
+}
+.createButton{
+    @apply
+    border bg-baseGreen text-white px-10 h-12 rounded-lg
+    text-xl font-bold
+    hover:bg-baseGreen hover:text-white transition
+}
+
+.card{
+    @apply
+    w-full
+    shadow bg-white rounded-lg
+    p-5
+}
+.cardImage{
+    @apply
+    w-full
+    rounded-md mb-6
+}
+.cardProgress{
+    @apply
+    flex items-center justify-between flex-wrap
+}
+.cardTitle{
+    @apply
+    text-lg mb-2 font-bold
+}
+.cardDescription{
+    @apply
+    text-sm block mb-8 text-gray-600
+}
+.donationButton{
+    @apply
+    
+    w-full bg-baseGreen text-white h-12 rounded-xl 
+    flex items-center text-center justify-center gap-4
+    text-lg
+    hover:bg-gray-800
+}
+.filterBox{
+    @apply
+     p-4  mb-4
+}
+.modalTitle{
+    @apply
+     text-2xl text-gray-900 font-bold
+     border-b border-gray-200 pb-4 mb-4
+}

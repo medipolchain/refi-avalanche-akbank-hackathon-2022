@@ -1,7 +1,8 @@
 import Head from "next/head";
-import axios from "axios";
+import { Layout } from "antd";
+import WelcomeBox from "../components/homeWelcomeBox";
 import { axiosClient } from "../utils/axiosClient";
-
+const { Content } = Layout;
 export default function Home({ data }) {
   return (
     <>
@@ -11,10 +12,9 @@ export default function Home({ data }) {
           <meta name="description" content="HorseAround" />
           <link rel="icon" href="/favicon.png" />
         </Head>
-        <h1>MedipalDao</h1>
-        {data.map((i) => (
-          <div>Test Axios : {i.title}</div>
-        ))}
+        <Content className="container mx-auto">
+          <WelcomeBox />
+        </Content>
       </div>
     </>
   );
