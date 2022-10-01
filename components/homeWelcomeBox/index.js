@@ -39,9 +39,6 @@ export default function WelcomeBox() {
         <span className={styles.item}>Bussiness</span>
         <span className={styles.item}>Education</span>
         <span className={styles.item}>Women</span>
-        <span className={styles.item}>Animals</span>
-        <span className={styles.item}>Food</span>
-        <span className={styles.item}>Memorial</span>
       </div>
     </div>
   );

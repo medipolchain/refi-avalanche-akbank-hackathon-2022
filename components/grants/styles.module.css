@@ -11,20 +11,21 @@
 }
 .subTitle{
     @apply
-    text-white  block
+    text-white  block 
+    
 }
 .createButton{
     @apply
     border bg-baseGreen text-white px-10 h-12 rounded-lg
     text-xl font-bold
-    hover:bg-baseGreen hover:text-white transition
+    hover:bg-baseGreen hover:text-white transition mt-4
 }
 
 .card{
     @apply
     w-full
     shadow bg-white rounded-lg
-    p-5
+    p-5 mb-2
 }
 .cardImage{
     @apply
@@ -58,5 +59,5 @@
 .modalTitle{
     @apply
      text-2xl text-gray-900 font-bold
-     border-b border-gray-200 pb-4 mb-4
+      pb-4 mb-4
 }

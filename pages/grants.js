@@ -27,7 +27,7 @@ export default function Grants({ data }) {
           <CreateModal open={open} handleCancel={handleCancel} />
           <Row gutter={16}>
             <Col className="gutter-row mb-4" span={8}>
-              <Card />
+              <Card id={1} />
             </Col>
             <Col className="gutter-row mb-4" span={8}>
               <Card />

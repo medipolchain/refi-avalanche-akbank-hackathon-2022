@@ -5,13 +5,17 @@ import cn from "classnames";
 import { SendOutlined } from "@ant-design/icons";
 import styles from "./styles.module.css";
 
-export default function Card() {
+export default function Card({ id }) {
   return (
     <div className={styles.card}>
-      <img
-        src="https://c.gitcoin.co/grants/d912abe30e0195326be963d2ba55107b/ReFi_-_Global_South.png"
-        className={styles.cardImage}
-      />
+      <Link href={`/grants/${id}`}>
+        <a>
+        <img
+          src="https://c.gitcoin.co/grants/d912abe30e0195326be963d2ba55107b/ReFi_-_Global_South.png"
+          className={styles.cardImage}
+        />
+        </a>
+      </Link>
       <div className={styles.cardProgress}>
         <span className="flex items-center flex-wrap text-gray-800 ">
           <span className="text-xl text-baseGreen font-bold mr-2">$22,000</span>
@@ -42,7 +46,7 @@ export default function Card() {
         markets and ReFi solutions by bringing integrity to Carbon and ...
       </span>
       <button className={styles.donationButton}>
-        <SendOutlined /> Send Donation
+        <SendOutlined /> Request Investment
       </button>
     </div>
   );

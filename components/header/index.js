@@ -32,14 +32,16 @@ export default function Header({ page }) {
           </Link>
         </nav>
         <div className="flex gap-3">
-          {account.data && (
+          {account.data ? (
+            <>
             <Link href="/profile">
               <a className={styles.navButton}>Profile</a>
             </Link>
-          )}
-          <Link href="/connectwallet">
+            <button className={styles.navDisconnectButton}>Disconnect</button>
+            </>
+          ): (
             <button className={styles.navButton}>Connect Wallet</button>
-          </Link>
+          )}
         </div>
       </header>
     </div>

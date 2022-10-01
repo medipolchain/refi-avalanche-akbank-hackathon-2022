@@ -41,7 +41,7 @@
 }
 .item{
     @apply
-    py-3 px-5 pl-8 text-sm bg-white shadow-sm rounded-2xl
+    py-3 px-5 text-sm bg-white shadow-sm rounded-2xl
     hover:bg-baseGreen hover:text-white
     cursor-pointer
 }
