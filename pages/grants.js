@@ -6,12 +6,32 @@ import { axiosClient } from "../utils/axiosClient";
 const { Content } = Layout;
 export default function Grants({ data }) {
   const [open, setOpen] = useState(false);
+  const [area, setArea] = useState(7);
+  const [category, setCategory] = useState();
+  const [budget, setBudget] = useState();
+  const [ssk, setSsk] = useState([]);
   const showModal = () => {
     setOpen(true);
   };
   const handleCancel = () => {
     setOpen(false);
   };
+  const handeCategorySelect = (e) => {
+    setCategory(e);
+  };
+  const handleBudget = (e) => {
+    setBudget(e);
+  };
+  const handeKSS = (e) => {
+    setSsk(e);
+  };
+  const handleAreaSelect = (e) => {
+    setArea(e);
+  };
+  const handeFilterSearch = () => {
+    alert("search ");
+  };
+
   return (
     <>
       <div className="home">
@@ -23,7 +43,14 @@ export default function Grants({ data }) {
 
         <Content className="container mx-auto mt-20 px-20">
           <Title showModal={showModal} />
-          <Filter />
+          <Filter
+            handeCategorySelect={handeCategorySelect}
+            handleBudget={handleBudget}
+            handeKSS={handeKSS}
+            handleAreaSelect={handleAreaSelect}
+            activeArea={area}
+            handeFilterSearch={handeFilterSearch}
+          />
           <CreateModal open={open} handleCancel={handleCancel} />
           <Row gutter={16}>
             <Col className="gutter-row mb-4" span={8}>

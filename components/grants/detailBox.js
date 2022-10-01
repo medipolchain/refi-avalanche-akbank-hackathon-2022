@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Space, Table, Tag } from "antd";
 import cn from "classnames";
 import { SendOutlined } from "@ant-design/icons";
+import { Status } from "./index";
 import styles from "./styles.module.css";
 
 export default function Card() {
@@ -48,12 +49,7 @@ export default function Card() {
     {
       title: "Action",
       key: "action",
-      render: (_, record) => (
-        <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
-        </Space>
-      ),
+      render: (_, record) => <a>Invite {record.name}</a>,
     },
   ];
   const data = [
@@ -102,6 +98,12 @@ export default function Card() {
       </div>
       <div className={styles.card}>
         <Table columns={columns} dataSource={data} />
+      </div>
+      <div className={styles.card}>
+        <div className={styles.cardTitle}>Status History</div>
+        <Status done />
+        <Status />
+        <Status />
       </div>
     </>
   );

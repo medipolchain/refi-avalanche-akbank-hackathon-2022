@@ -22,6 +22,9 @@ a {
 * {
   box-sizing: border-box;
 }
+g[id="turkiye"] > g[data-is-election-city="true"] > path {
+  fill: #47B88F !important;
+}
 
 /* @media (prefers-color-scheme: dark) {
   html {

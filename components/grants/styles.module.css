@@ -61,3 +61,7 @@
      text-2xl text-gray-900 font-bold
       pb-4 mb-4
 }
+.statusItem{
+    @apply
+    flex items-center justify-between gap-10   p-3 rounded-md mb-2 
+}

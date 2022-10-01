@@ -11,13 +11,14 @@ export default function Filter({
   handleBudget,
   handeKSS,
   handleAreaSelect,
-  activeArea = 7,
+  activeArea,
+  handeFilterSearch,
 }) {
   const [filterActive, setFilterActive] = useState(false);
   const renderCity = (cityComponent, cityData) => {
-    if (cityComponent.props["data-plakakodu"] === activeArea)
+    if (cityComponent.props["data-plakakodu"] == activeArea)
       cityComponent.props["data-is-election-city"] = true;
-    console.log(cityComponent);
+
     return (
       <Tooltip title={cityData.name} key={cityData.id}>
         {cityComponent}
@@ -77,7 +78,10 @@ export default function Filter({
                 onChange={(e) => handeKSS(e)}
               />
             </Form.Item>
-            <button className={styles.donationButton}>
+            <button
+              className={styles.donationButton}
+              onClick={() => handeFilterSearch()}
+            >
               <FilterOutlined /> Filter Search
             </button>
           </Form>
@@ -89,7 +93,7 @@ export default function Filter({
               hoverable={true}
               onClick={({ plateNumber, name }) =>
                 // console.log(plateNumber + " - " + name + " is just clicked!")
-                handleAreaSelect(name)
+                handleAreaSelect(plateNumber)
               }
               cityWrapper={renderCity}
               customStyle={{ idleColor: "#444", hoverColor: "#47B88F" }}

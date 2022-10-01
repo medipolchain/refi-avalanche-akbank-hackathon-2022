@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import { Layout, Col, Row, Empty } from "antd";
+import { Layout, Col, Row, Empty, Badge } from "antd";
 import { Title, Filter, Card, CreateModal } from "../components/grants";
 import { axiosClient } from "../utils/axiosClient";
 import { HeadBox } from "../components/dashboard";
@@ -36,7 +36,9 @@ export default function Profile({ data }) {
               </h2>
               <Row gutter={16}>
                 <Col className="gutter-row mb-4" span={8}>
-                  <Card />
+                  <Badge.Ribbon text="Bildirim Şeysi" color="cyan">
+                    <Card />
+                  </Badge.Ribbon>
                 </Col>
                 <Col className="gutter-row mb-4" span={8}>
                   <Card />
