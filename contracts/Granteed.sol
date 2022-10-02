@@ -8,9 +8,6 @@ import "./interfaces/INTT.sol";
 contract Granteed is Ownable {
     using SafeERC20 for IERC20;
     enum Status {
-        Pending,
-        Approved,
-        Accepted,
         InProgress,
         Finished
     }
@@ -19,15 +16,15 @@ contract Granteed is Ownable {
     mapping(uint256 => uint256) public categoryWeights;
     mapping(uint256 => bool) public nonceToBool;
     mapping(address => mapping(uint256 => mapping(address => bool))) requests;
-    IERC20 public immutable tusd;
+    IERC20 public immutable usdt;
     INTT public immutable sis;
 
-    constructor(address _tusd, address _sis) {
+    constructor(address _usdt, address _sis) {
         require(
-            _tusd != address(0) && _sis != address(0),
+            _usdt != address(0) && _sis != address(0),
             "Address cannot be zero"
         );
-        tusd = IERC20(_tusd);
+        usdt = IERC20(_usdt);
         sis = INTT(_sis);
     }
 
@@ -50,24 +47,16 @@ contract Granteed is Ownable {
     }
 
     function addGrant(
+        address to,
         uint256 category,
         bool legal,
         uint256[] calldata amounts,
         uint256 roi,
-        uint256 nonce,
-        bytes32 blobhash,
-        bytes memory signature
-    ) external {
-        uint256 grantId = grantCounter[msg.sender];
-        // require(
-        //     verifyRoiSig(grantId, roi, nonce, blobhash, signature),
-        //     "Invalid Signature"
-        // );
-        // require(!nonceToBool[nonce], "Nonce already used");
-        // nonceToBool[nonce] = true;
-
-        grants[msg.sender][grantId] = Grant({
-            status: Status.Approved,
+        bytes32 blobhash
+    ) external onlyOwner {
+        uint256 grantId = grantCounter[to];
+        grants[to][grantId] = Grant({
+            status: Status.InProgress,
             category: category,
             esroi: roi,
             legal: legal,
@@ -76,8 +65,7 @@ contract Granteed is Ownable {
             blobHash: blobhash,
             company: address(0)
         });
-
-        grantCounter[msg.sender]++;
+        grantCounter[to]++;
     }
 
     function verifyAcceptSig(
@@ -166,90 +154,19 @@ contract Granteed is Ownable {
         // implicitly return (r, s, v)
     }
 
-    // function setRoi(
-    //     uint256 grantId,
-    //     uint256 roi,
-    //     uint256 nonce,
-    //     bytes32 blobhash,
-    //     bytes memory signature
-    // ) external {
-    //     Grant storage grant = grants[msg.sender][grantId];
-    //     require(grant.status == Status.Pending, "Grant already processed");
-    //     require(
-    //         verifyRoiSig(grantId, roi, nonce, blobhash, signature),
-    //         "Invalid Signature"
-    //     );
-    //     require(!nonceToBool[nonce], "Nonce already used");
-    //     nonceToBool[nonce] = true;
-
-    //     grant.status = Status.Approved;
-    //     grant.esroi = roi;
-    //     grant.blobHash = blobhash;
-    // }
-
-    function setRequest(
-        address to,
-        uint256 grantId,
-        bool isRequest
-    ) external {
-        Grant storage grant = grants[to][grantId];
-        require(grant.status == Status.Approved, "Grant not Approved");
-        if (isRequest)
-            require(!requests[to][grantId][msg.sender], "Already requested");
-        else require(requests[to][grantId][msg.sender], "Not requested");
-        requests[to][grantId][msg.sender] = isRequest;
-    }
-
-    function acceptCompany(
-        uint256 grantId,
-        address company,
-        uint256 nonce,
-        bytes memory signature
-    ) external onlyOwner {
-        Grant storage grant = grants[msg.sender][grantId];
-        require(requests[msg.sender][grantId][msg.sender], "Not valid request");
-        require(grant.status == Status.Approved, "Grant not Approved");
-        require(
-            verifyAcceptSig(grantId, company, nonce, signature),
-            "Invalid Signature"
-        );
-        require(!nonceToBool[nonce], "Nonce already used");
-        nonceToBool[nonce] = true;
-
-        grant.status = Status.Accepted;
-        grant.company = company;
-    }
-
     function proceedGrant(address to, uint256 grantId) external {
         Grant storage grant = grants[to][grantId];
-        require(msg.sender == grant.company, "Not eligible");
         uint256 phase = grant.phase;
-        if (phase == 0) {
-            grant.status = Status.InProgress;
-        }
         require(grant.status == Status.InProgress, "Grant is not in progress");
         uint256[] memory amounts = grant.amounts;
 
         uint256 amount = amounts[phase];
-        tusd.safeTransfer(to, amount);
-        uint256 rewardAmount = calculateSis(grant);
-        sis.mint(to, rewardAmount);
+        usdt.safeTransferFrom(msg.sender, to, amount);
+        sis.mint(to, grant.esroi);
 
         grant.phase++;
         if (phase == amounts.length) {
             grant.status = Status.Finished;
         }
-    }
-
-    //TODO optimize algo
-    function calculateSis(Grant memory grant)
-        public
-        view
-        returns (uint256 rewardAmount)
-    {
-        rewardAmount = (grant.amounts[grant.phase] *
-            grant.esroi *
-            categoryWeights[grant.category]);
-        if (grant.legal) rewardAmount *= 2;
     }
 }
