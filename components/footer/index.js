@@ -16,27 +16,15 @@ export default function Footer() {
       <div className={styles.footerContent}>
         <div className="flex gap-40">
           <div>
-            <span className={styles.footerTitle}>Marketplace</span>
+            <span className={styles.footerTitle}>Links</span>
             <Link href="/">
               <a className={styles.footerLink}>Home</a>
             </Link>
             <Link href="/">
-              <a className={styles.footerLink}>Explore</a>
+              <a className={styles.footerLink}>About Us</a>
             </Link>
             <Link href="/">
-              <a className={styles.footerLink}>Contacts</a>
-            </Link>
-          </div>
-          <div>
-            <span className={styles.footerTitle}>Useful Links</span>
-            <Link href="/">
-              <a className={styles.footerLink}>Connect Wallet</a>
-            </Link>
-            <Link href="/">
-              <a className={styles.footerLink}>Faq</a>
-            </Link>
-            <Link href="/">
-              <a className={styles.footerLink}>Become a Seller</a>
+              <a className={styles.footerLink}>Grants</a>
             </Link>
           </div>
         </div>
