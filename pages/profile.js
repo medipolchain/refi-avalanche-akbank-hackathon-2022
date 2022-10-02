@@ -1,18 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Layout, Col, Row, Empty, Badge } from "antd";
 import { Title, Filter, Card, CreateModal } from "../components/grants";
 import { axiosClient } from "../utils/axiosClient";
 import { HeadBox } from "../components/dashboard";
+import { useAccount } from "../components/web3/hooks";
 const { Content } = Layout;
 export default function Profile({ data }) {
   const [open, setOpen] = useState(false);
+  const [count, setCount] = useState(0);
+  const { account } = useAccount();
   const showModal = () => {
     setOpen(true);
   };
   const handleCancel = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    let count = 0;
+    for(let i=0; i<data.length; i++){
+      if(data[i].publicAddress === account.data){
+        count++;
+      }
+    }
+    setCount(count);
+  }, []);
+
   return (
     <>
       <div className="home">
@@ -21,7 +35,7 @@ export default function Profile({ data }) {
           <meta name="description" content="HorseAround" />
           <link rel="icon" href="/favicon.png" />
         </Head>
-        <HeadBox />
+        <HeadBox item={data} />
 
         <Content className="container mx-auto mt-20 px-20">
           <CreateModal open={open} handleCancel={handleCancel} />
@@ -32,20 +46,17 @@ export default function Profile({ data }) {
                 <span className="bg-white border p-2 shadow rounded-md text-gray-700">
                   My Investments
                 </span>
-                <span className="text-base font-normal">4 Result</span>
+                <span className="text-base font-normal">0 Result</span>
               </h2>
               <Row gutter={16}>
-                <Col className="gutter-row mb-4" span={8}>
+{/*                 <Col className="gutter-row mb-4" span={8}>
                   <Badge.Ribbon text="Bildirim Şeysi" color="cyan">
-                    <Card />
+                    <Card item={data} />
                   </Badge.Ribbon>
-                </Col>
-                <Col className="gutter-row mb-4" span={8}>
-                  <Card />
-                </Col>
-                <Col className="gutter-row mb-4" span={8}>
-                  <Card />
-                </Col>
+                </Col> */}
+{/*                 <Col className="gutter-row mb-4" span={8}>
+                      <Card />
+                </Col>) */}
               </Row>
               <Row gutter={26}>
                 <Col className="gutter-row mb-4" span={24}>
@@ -53,28 +64,18 @@ export default function Profile({ data }) {
                     <span className="bg-white border p-2 shadow rounded-md text-gray-700">
                       My Grants
                     </span>
-                    <span className="text-base font-normal">0 Result</span>
+                    <span className="text-base font-normal">{count} Result</span>
                   </h2>
                   <Row gutter={16}>
-                    <Col className="gutter-row mb-4" span={24}>
-                      <div className="w-full bg-gray-200  text-white p-4 text-center rounded-md">
-                        <Empty
-                          //   image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                          imageStyle={{
-                            height: 200,
-                            display: "inline-block",
-                          }}
-                          description={<span>Empy Response</span>}
-                        >
-                          <button
-                            className="bg-gray-900 px-4 h-11 mb-10 text-xl rounded-md"
-                            onClick={() => showModal()}
-                          >
-                            Create Grants
-                          </button>
-                        </Empty>
-                      </div>
-                    </Col>
+                    {data.map((item, key) => (
+                      item["publicAddress"] === account.data && (
+                      <>
+                    <Col key={key} className="gutter-row mb-4" span={8}>
+                      <Card item={item} />
+                     </Col>
+                     </>  
+                      )
+                        ))}
                   </Row>
                 </Col>
               </Row>
@@ -86,14 +87,10 @@ export default function Profile({ data }) {
   );
 }
 export async function getServerSideProps(context) {
-  const data1 = await axiosClient.get(
-    "https://jsonplaceholder.typicode.com/todos"
-  );
-  console.log("test", data1.data);
-  const data = {};
+  const data  = await axiosClient.get("get_grants");
   return {
     props: {
-      data: data1.data,
+      data: JSON.parse(JSON.stringify(data.data)),
     },
   };
 }

@@ -10,11 +10,9 @@ export default function WelcomeBox() {
     <div className={cn(styles.welcomeBox)}>
       <div className={styles.bg}></div>
       <span className={styles.subTitle}>ALL WORLD</span>
-      <h2 className={styles.title}>Causes that Speak to YOU</h2>
+      <h2 className={styles.title}><span className="text-[#46b88f]"><b>Grant</b></span> is <span className="text-[#46b88f]"><b>Guaranteed</b></span></h2>
       <span className={styles.desc}>
-        The ***** app allows you to effectively convert content and community
-        engagement into charitable donations. From peer-to-peer donations,
-        fundraising campaigns, crowdfunding, crowdsourcing, and much more.{" "}
+        Social Grant Marketplace; Kurumsal Sosyal Sorumluluk Algoritması ile sosyal kalkınma projelerinin optimizasyonunu sağlayarak etki sertifikası dağıtması ve bu sosyal etkinin üretim şirketleri tarafından geliştirilmesini sağlar.{" "}
       </span>
       <div className={styles.itemBox}>
         <span className={styles.item}>Health</span>

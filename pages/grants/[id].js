@@ -1,14 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Layout, Col, Row, PageHeader } from "antd";
 import { SideBar, DetailBox } from "../../components/grants";
 import { axiosClient } from "../../utils/axiosClient";
+import { useRouter } from 'next/router'
+
 const { Content } = Layout;
-export default function GrantsDetail({ data }) {
+export default function GrantsDetail({ info, id }) {
   const [open, setOpen] = useState(false);
+  const [item, setItem] = useState({})
+  const router = useRouter()
+
+  useEffect(() => {
+    const x = parseInt(router.query.id)
+      axiosClient.post("get_grant", {
+      index:x
+    }).then((res) => {
+      console.log("res", res);
+      setItem(res.data)
+    });
+  }, []);
+
   const showModal = () => {
     setOpen(true);
   };
+
+  useEffect(() => {
+    console.log("data", info);
+    console.log("id",id)
+    console.log(item)
+  });
+
   const handleCancel = () => {
     setOpen(false);
   };
@@ -16,11 +38,12 @@ export default function GrantsDetail({ data }) {
   const goBack = () => {
     window.location.href = "/grants";
   };
+
   return (
     <>
       <div className="home">
         <Head>
-          <title>MedipalDao</title>
+          <title>Granteed</title>
           <meta name="description" content="HorseAround" />
           <link rel="icon" href="/favicon.png" />
         </Head>
@@ -35,10 +58,10 @@ export default function GrantsDetail({ data }) {
               />
             </Col>
             <Col className="gutter-row mb-4" span={18}>
-              <DetailBox />
+              <DetailBox item={item} />
             </Col>
             <Col className="gutter-row mb-4" span={6}>
-              <SideBar />
+              <SideBar item={item} />
             </Col>
           </Row>
         </Content>
@@ -46,15 +69,17 @@ export default function GrantsDetail({ data }) {
     </>
   );
 }
-export async function getServerSideProps(context) {
-  const data1 = await axiosClient.get(
-    "https://jsonplaceholder.typicode.com/todos"
-  );
-  console.log("test", data1.data);
-  const data = {};
+
+export async function getServerSideProps(params) {
+  const { id } = await params.query;
+  const info = await axiosClient.post("get_grant", {
+    index: id
+  });
+  console.log(info)
   return {
-    props: {
-      data: data1.data,
+    props: { 
+      id:id,
+      info: JSON.stringify(info.data)
     },
   };
 }

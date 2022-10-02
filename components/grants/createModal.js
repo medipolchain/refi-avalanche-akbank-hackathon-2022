@@ -14,11 +14,13 @@ import {
   Steps,
 } from "antd";
 import { InfoCircleOutlined, DeleteOutlined } from "@ant-design/icons";
-
+import { useAccount } from "../web3/hooks";
+import { useWeb3 } from "../web3/providers";
 import cn from "classnames";
 import { FilterOutlined } from "@ant-design/icons";
 import styles from "./styles.module.css";
 import TextArea from "antd/lib/input/TextArea";
+import { axiosClient } from "../../utils/axiosClient";
 const { Option } = Select;
 const { Step } = Steps;
 const children = [];
@@ -28,12 +30,18 @@ for (let i = 10; i < 36; i++) {
 export default function   CreateModal({ open, handleCancel }) {
   const [filterActive, setFilterActive] = useState(false);
   const [current, setCurrent] = useState(0);
+/*   const [contract, setContract] = useState();
+  const contractAddress = "0x24d36c1425eeC89623cC9707F197B481d275fDA4";
+  const { account } = useAccount();
+  const { web3 } = useWeb3(); */
+  const { account } = useAccount();
   const [activities, setActivities] = useState([
     {
       summary: "",
       budget: "",
     },
   ]);
+
   const [impact, setImpact] = useState([
     {
       numberOfHouse: "",
@@ -49,9 +57,11 @@ export default function   CreateModal({ open, handleCancel }) {
 
   const [grant, setGrant] = useState({
     grantName: "",
+    description:"",
     year: "",
     category: [],
     budget: "",
+    location:"",
     date: "",
     report: "",
     domain: "",
@@ -59,10 +69,19 @@ export default function   CreateModal({ open, handleCancel }) {
 
   const [form] = Form.useForm();
 
-  const onChange = (date, dateString) => {
-    setGrant({ ...grant, year: dateString.split("-")[0] });
+  useEffect(() => {
+    console.log(grant);
+  }, [grant]);
+
+/*   const onChange = (date, dateString) => {
+    setGrant({ ...grant, date: dateString.toString().split("-")[0] });
   };
-  console.log("form", form.getFieldValue("grantName"));
+  
+  const onChangeAction = (date, dateString) => {
+    setGrant({ ...grant, year: dateString.toString().split("-")[0] });
+  } */
+
+  console.log("form", form.getFieldValue("description"));
   const onRequiredTypeChange = (d) => {
     console.log("d", d);
   };
@@ -100,18 +119,54 @@ export default function   CreateModal({ open, handleCancel }) {
     setGrant(a);
   };
   const onFinish = (values) => {
-    console.log(gant, impact, activities);
+    console.log(grant, impact, activities);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const createGrant = () => {
+  const createGrant = async() => {
     //POST request to create grant
-    console.log(grant, impact, activities);
+    await axiosClient.post("set_grant", {
+      "name": "Akbank ReFi Hackathon",
+      "publicAddress":account,
+      "description": "Akbank ReFi Hackathon",
+      "category": 0,
+      "year": 2021,
+      "location": 6,
+      "budget": 100000,
+      "impact_area": 150,
+      "impact_people": 1000,
+      "average_age": 25,
+      "legal": 0,
+      "date": 6,
+      "activities": [
+          {
+              "id":0,
+              "budget":17500,
+              "description":"xxx"
+          },
+                  {
+              "id":1,
+              "budget":15000,
+              "description":"yyy"
+          },
+                  {
+              "id":2,
+              "budget":20000,
+              "description":"zzz"
+          }
+      ]
   }
-
+    ).then((response) => {
+      console.log(response);
+    }
+    ).catch((error) => {
+      console.log(error);
+    }
+    )}
+    
   return (
     <Modal
       open={open}
@@ -156,21 +211,75 @@ export default function   CreateModal({ open, handleCancel }) {
               <Input placeholder="Grant name" size="large" />
             </Form.Item>
           </Col>
-          <Col className="gutter-row" span={12}>
+          <Col className="gutter-row" span={24}>
             <Form.Item
-              label="Year"
-              name="year"
+              label="Description"
+              tooltip="This is a required field"
+              name="description"
               rules={[
                 {
                   required: true,
                   message: "This is a required field!",
                 },
               ]}
-              tooltip="This is a required field"
             >
-              <DatePicker onChange={onChange} size="large" className="w-full" />
+              <Input placeholder="Description" size="large"
+              value={grant.description}
+              onChange={(e) => setGrant({ ...grant, description: e.target.value })}
+              />
             </Form.Item>
           </Col>
+          <Col className="gutter-row" span={12}>
+            <Form.Item
+              label="Year"
+              name="year"
+              rules={[
+                {
+                  required: false,
+                  message: "This is a required field!",
+                },
+              ]}
+              tooltip="This is a required field"
+            >
+              <DatePicker size="large" className="w-full" />
+            </Form.Item>
+          </Col>
+          <Col className="gutter-row" span={8}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "This is a required field!",
+                    },
+                  ]}
+                  label="Location"
+                  tooltip={{
+                    title: "Tooltip with customize icon",
+                    icon: <InfoCircleOutlined />,
+                  }}
+                >
+                  <Select
+                    initialValue="Istanbul"
+                    size="large"
+                    className="w-full"
+                    onChange={
+                      (value) => setGrant({ ...grant, location: value })
+                    }
+                  >
+                    <Option value="0">Istanbul</Option>
+                    <Option value="1">Ankara</Option>
+                    <Option value="2">Izmir</Option>
+                    <Option value="3">Bursa</Option>
+                    <Option value="4">Antalya</Option>
+                    <Option value="5">Adana</Option>
+                    <Option value="6">Gaziantep</Option>
+                    <Option value="7">Konya</Option>
+                    <Option value="8">Mersin</Option>
+                    <Option value="9">Diyarbakır</Option>
+                    <Option value="10">Kayseri</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
           <Col className="gutter-row" span={12}>
             <Form.Item
               rules={[
@@ -186,17 +295,10 @@ export default function   CreateModal({ open, handleCancel }) {
                 icon: <InfoCircleOutlined />,
               }}
             >
-              <Select
-                mode="multiple"
-                size={"large"}
-                placeholder="Please select"
-                // onChange={handleChange}
-                style={{
-                  width: "100%",
-                }}
-              >
-                {children}
-              </Select>
+            <Input
+                size="large"
+                className="w-full"
+              />
             </Form.Item>
           </Col>
           <Col className="gutter-row" span={24}>
@@ -228,13 +330,13 @@ export default function   CreateModal({ open, handleCancel }) {
               label="Planned Action Time"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "This is a required field!",
                 },
               ]}
               tooltip="This is a required field"
             >
-              <DatePicker onChange={onChange} size="large" className="w-full" />
+              <DatePicker size="large" className="w-full" />
             </Form.Item>
           </Col>
           <Col className="gutter-row" span={24}>

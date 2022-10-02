@@ -3,7 +3,7 @@ import { Avatar } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import styles from "./styles.module.css";
 
-export default function Head() {
+export default function Head({ item }) {
   return (
     <div className={styles.head}>
       <div className="container px-20 mx-auto">

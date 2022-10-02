@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Layout, Col, Row } from "antd";
 import { Title, Filter, Card, CreateModal } from "../components/grants";
@@ -6,7 +6,7 @@ import { axiosClient } from "../utils/axiosClient";
 const { Content } = Layout;
 export default function Grants({ data }) {
   const [open, setOpen] = useState(false);
-  const [area, setArea] = useState(7);
+  const [area, setArea] = useState(0);
   const [category, setCategory] = useState();
   const [budget, setBudget] = useState();
   const [ssk, setSsk] = useState([]);
@@ -32,6 +32,12 @@ export default function Grants({ data }) {
     alert("search ");
   };
 
+  useEffect(() => {
+    console.log("data", data);
+    console.log("area",area)
+
+  }, []);
+
   return (
     <>
       <div className="home">
@@ -53,9 +59,17 @@ export default function Grants({ data }) {
           />
           <CreateModal open={open} handleCancel={handleCancel} />
           <Row gutter={16}>
-            <Col className="gutter-row mb-4" span={8}>
-              <Card id={1} />
-            </Col>
+            {data.map((item,key) => (
+              item.location === area ? (
+            <Col key={key} className="gutter-row mb-4" span={8}>
+              <Card id={key} item={item} />
+            </Col> ) : (
+              area === 0 ? (
+                <Col key={key} className="gutter-row mb-4" span={8}>
+              <Card id={key} item={item} />
+            </Col>) : null  
+            )
+            ))}
           </Row>
         </Content>
       </div>
@@ -63,13 +77,11 @@ export default function Grants({ data }) {
   );
 }
 export async function getServerSideProps(context) {
-  const data1 = await axiosClient.get(
-    "https://jsonplaceholder.typicode.com/todos"
-  );
-  console.log("test", data1.data);
+  const grants = await axiosClient.get("get_grants")
+
   return {
     props: {
-      data: data1.data,
+      data: JSON.parse(JSON.stringify(grants.data)),
     },
   };
 }

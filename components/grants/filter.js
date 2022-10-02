@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tooltip, Select, Form, Input, Slider, Row, Col } from "antd";
 import cn from "classnames";
 import TurkeyMap from "turkey-map-react";
@@ -25,6 +25,10 @@ export default function Filter({
       </Tooltip>
     );
   };
+
+  useEffect(() => {
+    console.log("activeArea", activeArea);
+  }, [activeArea]);
   return (
     <div className={styles.filterBox}>
       <div className="text-end mb-2">

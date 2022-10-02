@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Progress, Avatar } from "antd";
 import cn from "classnames";
 import { SendOutlined } from "@ant-design/icons";
 import styles from "./styles.module.css";
 
-export default function SideBar() {
+export default function SideBar({ item }) {
+  const [annualBudget, setAnnualBudget] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let count = 0;
+    console.log(item)
+    for(let x=0; x<item.activities.length; x++){
+      count += item.activities[x].budget;
+    }
+    setAnnualBudget(count);
+    setProgress((count / item.budget) * 100);
+    console.log(progress)
+  }, []);
   return (
     <>
       <div className={styles.card}>
@@ -16,18 +29,18 @@ export default function SideBar() {
         <div className={styles.cardProgress}>
           <span className="flex items-center flex-wrap text-gray-800 ">
             <span className="text-xl text-baseGreen font-bold mr-2">
-              $22,000
+              ${annualBudget}
             </span>
-            of $40 000
+            of ${item.budget}
           </span>
-          <span className="text-gray-400 text-lg font-bold">62 %</span>
+          <span className="text-gray-400 text-lg font-bold">{progress} %</span>
         </div>
         <Progress
           strokeColor={{
             "0%": "#108ee9",
             "100%": "#87d068",
           }}
-          percent={62}
+          percent={progress}
           showInfo={false}
           className="mb-4"
         />
@@ -40,7 +53,7 @@ export default function SideBar() {
         <Link href="">
           <a className="flex items-center gap-4 mb-4">
             <Avatar src="https://joeschmoe.io/api/v1/random" />
-            <span>Berkay</span>
+            <span>{item.publicAddress}</span>
           </a>
         </Link>
       </div>
