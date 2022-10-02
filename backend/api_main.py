@@ -9,6 +9,8 @@ from web3 import Web3
 
 import pydantic
 from bson.objectid import ObjectId
+from blob_com import BlobCom
+import json
 
 pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
 
@@ -17,6 +19,10 @@ web3 = Web3()
 
 load_dotenv(find_dotenv())
 client = MongoClient(os.environ.get("MONGODB_PWD"))
+
+rpc_url = "http://127.0.0.1:9650/ext/bc/hkyNydABLfSvASVMKDvkKAbD4ac2UJRZ4Fb6ukhHN2WSe1jF2"
+blob_path = "/home/yusufbenli/blob/blobvm/build/"
+blob_com = BlobCom(rpc_url=rpc_url, blob_path=blob_path)
 
 grand_categories = {
     0: "Arts",
@@ -45,6 +51,8 @@ grand_countries = {
     9: "Diyarbakir",
     10: "Kayseri"
 }
+
+user_indexes = {}
 
 
 def get_database_names():
@@ -154,6 +162,7 @@ async def set_grant(req: Request):
     """
     """
     grant_info = {
+        "publicAddress": "0x123"
         "name": "Akbank ReFi Hackathon",
         "description": "Akbank ReFi Hackathon",
         "index": 0,
@@ -171,11 +180,24 @@ async def set_grant(req: Request):
     }
     """
     try:
+
         pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
 
         data = await req.json()
 
+        blob_hash = blob_com.set_text(data)
+        if not blob_hash:
+            return "ERROR"
+
+        publicAddress = data["publicAddress"]
+        if publicAddress not in user_indexes.keys():
+            user_indexes[publicAddress] = 0
+        else:
+            user_indexes[publicAddress] += 1
+
         grant_info = {
+            "publicAddress": publicAddress,
+            "grant_index": user_indexes[publicAddress],
             "name": data["name"],
             "description": data["description"],
             "index": grant_index_count(),
@@ -188,13 +210,14 @@ async def set_grant(req: Request):
             "average_age": data["average_age"],
             "legal": data["legal"],
             "date": data["date"],  # months
-            "report_hash": data["report_hash"],
-            "activities": data["activities"],  # total number of activities required to complete the grant
+            "blob_hash": blob_hash,
+            "activities": data["activities"]  # total number of activities required to complete the grant
         }
 
         collection = get_collection("grants")
         result = collection.insert_one(grant_info).inserted_id
-        return result
+
+        return blob_hash
 
     except Exception as e:
         return e
@@ -255,3 +278,9 @@ async def get_categories():
 
     except Exception as e:
         return e
+
+
+@app.post("/blobhash/{blobhash}")
+async def get_item(blobhash: str):
+    out = blob_com.get_blob(blobhash)
+    return out if out else "ERROR"
